@@ -25,8 +25,22 @@ $table->unsignedBigInteger('organization_id');
 $table->foreign('organization_id')->references('id')->on('organizations');
 ```
 
+# Customizing foreign key setup behavior
+If the foreign key references a column other than id or a table with a different name, you can explicitly specify it:
+- Field in the Current Table (organization_id)
+- Referenced Table (companies)
+- Referenced Field (company_id)
+```php
+$table->foreignId('organization_id')->constrained('companies', 'company_id');
 
+// OR
 
+$table->unsignedBigInteger('organization_id');
+$table->foreign('organization_id')
+      ->references('company_id')
+      ->on('companies');
+
+```
 
 
 </details>
