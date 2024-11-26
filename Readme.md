@@ -42,5 +42,16 @@ $table->foreign('organization_id')
 
 ```
 
+# Foreign key Cascading Options
+- cascade: Automatically delete or update dependent rows.
+- restrict: Prevent deletion or updates if there are dependent rows.
+- set null: Set the foreign key column to NULL if the parent is deleted.
+```php
+$table->foreignId('organization_id')
+      ->constrained()
+      ->onDelete('cascade')
+      ->onUpdate('cascade');
+
+```
 
 </details>
