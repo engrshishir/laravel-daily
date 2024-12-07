@@ -234,3 +234,94 @@ class AddIsAdminToUsersTable extends Migration
     }
 ```
 </details>
+
+
+
+
+
+
+
+
+
+
+<br>
+<details>
+<summary style="display: flex; justify-content: space-between; align-items: center; background-color: ##1345; color: white; padding: 5px; border-radius: 5px; cursor:pointer;">
+  <span>🚀 Middleware </span>
+  <span style="margin-left: auto; font-weight: bold;">📅 December 07, 2024</span>
+</summary>
+
+- php artisan make:middleware IsAdmin
+
+```php
+php artisan make:middleware IsAdmin
+```
++ IsAdmin middleware file:
+
+```php
+namespace App\Http\Middleware;
+
+use Closure;
+use Illuminate\Http\Request;
+
+class IsAdmin
+{
+    public function handle(Request $request, Closure $next)
+    {
+        if (auth()->check() && auth()->user()->is_admin) {
+            return $next($request);
+        }
+
+        abort(403, 'Unauthorized'); // Deny access
+    }
+}
+```
+
+
++  Register the middleware in `app/Http/Kernel.php` if kernel.php present:
+```php
+protected $routeMiddleware = [
+    // Other middleware
+    'is_admin' => \App\Http\Middleware\IsAdmin::class,
+];
+
+```
+
++  Register the middleware in `bootstrap/app.php` if kernel.php not present:
+```php
+<?php
+   
+use Illuminate\Foundation\Application;
+use Illuminate\Foundation\Configuration\Exceptions;
+use Illuminate\Foundation\Configuration\Middleware;
+   
+return Application::configure(basePath: dirname(__DIR__))
+    ->withRouting(
+        web: __DIR__.'/../routes/web.php',
+        commands: __DIR__.'/../routes/console.php',
+        health: '/up',
+    )
+    ->withMiddleware(function (Middleware $middleware) {
+        $middleware->alias([
+            'isAdmin' => \App\Http\Middleware\IsAdmin::class,
+        ]);
+    })
+    ->withExceptions(function (Exceptions $exceptions) {
+        //
+    })->create();
+```
+
++ Apply Middleware
+```php
+<?php
+Route::middleware(['isAdmin'])->group(function () {
+    Route::get('/dashboard', function () {
+        return 'Dashboard';
+    });
+      
+    Route::get('/users', function () {
+        return 'Users';
+    });
+});
+```
+</details>
