@@ -167,3 +167,70 @@ About::create([
 ]);
 ```
 </details>
+
+
+
+
+
+<br>
+<details>
+<summary style="display: flex; justify-content: space-between; align-items: center; background-color: ##1345; color: white; padding: 5px; border-radius: 5px; cursor:pointer;">
+  <span>🚀 Update the Database Schema</span>
+  <span style="margin-left: auto; font-weight: bold;">📅 December 07, 2024</span>
+</summary>
+
+- You need to add the is_admin column to the users table. Create a new migration:
+
+```php
+ php artisan make:migration add_is_admin_to_users_table --table=users
+```
++ Edit the generated migration file:
+
+```php
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+class AddIsAdminToUsersTable extends Migration
+{
+    /**
+     * php artisan migrate
+     * This executes the up() method, adding the is_admin column.
+     */
+    public function up(): void
+    {
+        Schema::table('users', function (Blueprint $table) {
+            $table->boolean('is_admin')->default(false)->after('password'); // Add the is_admin column
+        });
+    }
+
+    /**
+     * Rollback the Migration:
+     * php artisan migrate:rollback
+     * This executes the down() method, removing the is_admin column.
+     */
+    public function down(): void
+    {
+        Schema::table('users', function (Blueprint $table) {
+            $table->dropColumn('is_admin'); // Remove the is_admin column
+        });
+    }
+}
+
+```
++  Update the User Model
+```php
+    protected $fillable = [
+        'is_admin',
+    ];
+
+    protected function casts(): array
+    {
+        return [
+            'email_verified_at' => 'datetime',
+            'password' => 'hashed',
+            'is_admin' => 'boolean', // Add this line
+        ];
+    }
+```
+</details>
