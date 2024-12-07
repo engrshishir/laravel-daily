@@ -1,7 +1,7 @@
 <details>
 <summary style="display: flex; justify-content: space-between; align-items: center; background-color: ##28a745; color: white; padding: 5px 10px; border-radius: 5px; cursor:pointer;">
   <span>🚀 Define a foreign key constraint</span>
-  <span style="margin-left: auto; font-weight: bold;">📅 November 27, 2024</span>
+  <span style="margin-left: auto; font-weight: bold;  color:red;">📅 November 27, 2024</span>
 </summary>
 
 ```php
@@ -110,5 +110,60 @@ $about = $organization->about;
 // Approach 2
 $about = About::with('organization')->find(1);
 $organization = $about->organization;
+```
+</details>
+
+
+
+
+
+<br>
+<details>
+<summary style="display: flex; justify-content: space-between; align-items: center; background-color: ##1345; color: white; padding: 5px; border-radius: 5px; cursor:pointer;">
+  <span>🚀 Fillable & Mass assignment</span>
+  <span style="margin-left: auto; font-weight: bold; color:red;">📅 December 07, 2024</span>
+</summary>
+
+- $fillable: Defines a whitelist of attributes that are allowed for mass assignment.
+- $guarded: Setting it to an empty array ([]) allows all attributes to be mass-assignable. 
+
+```php
+protected $fillable = ['name', 'phone', 'email', 'age', 'country'];
+
+About::create([
+    'name' => 'John Doe', 
+    'phone' => '123456789',
+    'email' => 'johndoe@example.com',
+    'age' => 30,
+]);
+
+```
+
+```php
+protected $guarded = [];
+
+About::create([
+    'name' => 'John Doe', 
+    'phone' => '123456789',
+    'email' => 'johndoe@example.com',
+    'age' => 30,
+    'id' => 1,         // Overwrites the first record
+    'is_admin' => true // Unexpected, if such a field exists
+]);
+
+```
+
+
++ mass-assignment protection is completely disabled. This means Laravel will allow any attribute provided in the input array to be directly inserted into the database
+
+```php
+protected $guarded = ['id'];
+
+About::create([
+    'name' => 'John Doe',
+    'phone' => '123456789',
+    'email' => 'johndoe@example.com',
+    'id' => 10, // Will be ignored because it's guarded
+]);
 ```
 </details>
