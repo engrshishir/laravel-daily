@@ -22,7 +22,8 @@ $table->foreignId('organization_id');
   organizations table (based on the column name organization_id)
 
 ```php
-$table->foreignId('organization_id')->constrained();
+$table->foreignId('organization_id')->constrained(); // if table name follow laravel naming convention. Like: organizations
+$table->foreignId('organization_id')->constrained('orgs') // If not follw. Ex: orgs
 
 //OR
 
@@ -48,7 +49,6 @@ $table->unsignedBigInteger('organization_id');
 $table->foreign('organization_id')
       ->references('company_id')
       ->on('companies');
-
 ```
 
 ## Foreign key Cascading Options
@@ -63,6 +63,9 @@ $table->foreignId('organization_id')
       ->onDelete('cascade')
       ->onUpdate('cascade');
 
+// OR
+
+$table->foreignId('organization_id')->constrained()->cascadeOnDelete()->cascadeOnUpdate();
 ```
 
 </details>
